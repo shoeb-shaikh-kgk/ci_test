@@ -19,7 +19,7 @@ class CounterScreen extends StatefulWidget {
   const CounterScreen({Key? key}) : super(key: key);
 
   @override
-  _CounterScreenState createState() => _CounterScreenState();
+  State<CounterScreen> createState() => _CounterScreenState();
 }
 
 class _CounterScreenState extends State<CounterScreen> {
@@ -57,9 +57,11 @@ class _CounterScreenState extends State<CounterScreen> {
               key: const Key('second_screen_button'), // Add a key here
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SecondScreen()));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SecondScreen(),
+                  ),
+                );
               },
               child: const Text('Go to Second Screen'),
             ),
