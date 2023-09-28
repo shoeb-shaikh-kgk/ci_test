@@ -20,8 +20,8 @@ download_and_extract_archive() {
     
     mkdir -p "$target_dir"
     
-    # Use curl to download the archive
-    curl --connect-timeout 15 --retry 5 -o "$target_dir/archive.tar.xz" "$archive_url"
+    # Use wget to download the archive
+    wget --retry-connrefused --waitretry=1 -O "$target_dir/archive.tar.xz" "$archive_url"
     
     # Extract the archive using tar
     tar xf "$target_dir/archive.tar.xz" -C "$target_dir" --strip-components=1
@@ -40,7 +40,7 @@ fi
 download_manifest() {
     if [[ ! -f "$MANIFEST_JSON_PATH" ]]; then
         echo "Downloading Flutter releases manifest..."
-        curl --connect-timeout 15 --retry 5 -o "$MANIFEST_JSON_PATH" "$MANIFEST_URL"
+        wget --retry-connrefused --waitretry=1 -O "$MANIFEST_JSON_PATH" "$MANIFEST_URL"
     fi
 }
 
