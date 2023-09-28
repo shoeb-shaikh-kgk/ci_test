@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Flutter Setup
-        uses: ./action.yml@v1
+        uses: .action.yml@v1
         with:
             channel: stable
             version: any
