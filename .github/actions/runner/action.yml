@@ -13,7 +13,7 @@ inputs:
     description: 'The architecture of Flutter SDK executable (x64 or arm64)'
     required: false
     default: 'x64'
-
+  
 runs:
-  using: 'shell'
-  command: './.github/actions/runner/setup.sh ${{ inputs.channel }} ${{ inputs.version }} ${{ inputs.arch }}'
+  name: Flutter Setup 
+    run: './.github/actions/runner/setup.sh ${{ inputs.channel }} ${{ inputs.version }} ${{ inputs.arch }}'
