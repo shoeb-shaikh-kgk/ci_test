@@ -50,7 +50,8 @@ setup_flutter() {
     local version="$2"
     local arch="$3"
     local cache="$4"
-    
+        # Download the manifest file if it doesn't exist
+    download_manifest
     [[ "$channel" == "master" ]] && FLUTTER_VERSION="master" || {
         local version_manifest
         version_manifest=$(filter_manifest "$channel" "$arch" "$version")
