@@ -18,19 +18,16 @@ download_and_extract_archive() {
     local archive_url="$1"
     local target_dir="$2"
     
-    mkdir -p "$CACHE_DIR"
-    local archive_name=$(basename "$archive_url")
-    local archive_local="$CACHE_DIR/$archive_name"
+    mkdir -p "$target_dir"
     
-    curl --connect-timeout 15 --retry 5 -o "$archive_local" "$archive_url"
+    # Use curl to download the archive
+    curl --connect-timeout 15 --retry 5 -o "$target_dir/archive.tar.xz" "$archive_url"
     
-    if [[ "$archive_name" == *.zip ]]; then
-        unzip -q -o "$archive_local" -d "$target_dir"
-    else
-        tar xf "$archive_local" -C "$target_dir" --strip-components=1
-    fi
+    # Extract the archive using tar
+    tar xf "$target_dir/archive.tar.xz" -C "$target_dir" --strip-components=1
     
-    rm -f "$archive_local"
+    # Remove the downloaded archive file
+    rm -f "$target_dir/archive.tar.xz"
 }
 
 # Check for the required jq tool
