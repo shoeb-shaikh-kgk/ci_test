@@ -1,0 +1,19 @@
+name: 'Flutter Action'
+
+inputs:
+  channel:
+    description: 'The Flutter build release channel'
+    required: false
+    default: 'stable'
+  version:
+    description: 'The Flutter version to install'
+    required: false
+    default: 'any'
+  arch:
+    description: 'The architecture of Flutter SDK executable (x64 or arm64)'
+    required: false
+    default: 'x64'
+
+runs:
+  using: 'shell'
+  command: './.github/actions/flutter-setup/setup.sh ${{ inputs.channel }} ${{ inputs.version }} ${{ inputs.arch }}'

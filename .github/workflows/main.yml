@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Flutter
+      - name: Flutter Setup
         uses: ./.github/actions/runner # Our Custom Action For Flutter
         with:
           channel: stable # Specify the Flutter channel
