@@ -9,11 +9,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: dart-lang/setup-dart@v1.5.1
-      
-      - run: dart pub global activate fvm
-      - run: fvm install 3.13.3
-      - run: fvm use 3.13.3
-      - run: fvm flutter test
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1.5.1
+
+      - name: Cache Flutter and pub dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.pub
+            ~/.fvm
+          key: ${{ runner.os }}-flutter-pub-${{ hashFiles('**/*.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-pub-
+
+      - name: Install and use FVM
+        run: |
+          dart pub global activate fvm
+          fvm install 3.13.3
+          fvm use 3.13.3
+
+      - name: Run Flutter tests
+        run: fvm flutter test
