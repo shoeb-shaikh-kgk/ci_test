@@ -20,7 +20,9 @@ download_manifest_if_not_exists() {
     if [[ ! -f "$LOCAL_MANIFEST_PATH" ]]; then
         echo "Downloading Flutter releases manifest..."
         mkdir -p "$(dirname "$LOCAL_MANIFEST_PATH")"
-        curl --connect-timeout 15 --retry 5 -o "$LOCAL_MANIFEST_PATH" "$MANIFEST_URL"
+        echo "$MANIFEST_URL"
+        curl --connect-timeout 15 --retry 5 -o "$LOCAL_MANIFEST_PATH" "$MANIFEST_URL" || { echo "Failed to download Flutter releases manifest."; exit 1; }
+
     else
         echo "Using existing Flutter releases manifest at $LOCAL_MANIFEST_PATH"
     fi
