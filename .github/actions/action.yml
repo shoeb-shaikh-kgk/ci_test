@@ -38,4 +38,4 @@ runs:
       if: ${{ inputs.cache-sdk == 'true' }}
       run: echo "Flutter Cache Path: ${{ steps.flutter.outputs.sdk-cache-path }}"
     - run: echo "Installed Flutter Version: ${{ steps.setup-flutter.outputs.installed-version }}"
-      shell: bash
+    shell: bash
