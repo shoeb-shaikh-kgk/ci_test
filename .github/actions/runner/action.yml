@@ -16,4 +16,4 @@ inputs:
 
 runs:
   using: 'shell'
-  command: './.github/actions/flutter-setup/setup.sh ${{ inputs.channel }} ${{ inputs.version }} ${{ inputs.arch }}'
+  command: './.github/actions/runner/setup.sh ${{ inputs.channel }} ${{ inputs.version }} ${{ inputs.arch }}'

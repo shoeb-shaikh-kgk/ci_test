@@ -4,22 +4,25 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Flutter Setup
-        run: ./.github/actions/flutter-setup/setup.sh
+        uses: ./.github/actions/runner # Our Custom Action For Flutter
         with:
           channel: stable # Specify the Flutter channel
-          version: any    # Specify the Flutter version
-          arch: x64   
+          version: any # Specify the Flutter version
+          arch: x64 # Specify the architecture
 
       - name: Cache Flutter packages
         uses: actions/cache@v2
