@@ -15,9 +15,11 @@ jobs:
         uses: subosito/flutter-action@v2.10.0
         with:
           flutter-version: '3.13.3'
-
+      - name: Run Analayze
+        run: flutter analyze
+        
       - name: Run tests
         run: flutter test
 
       - name: Generate code coverage report
-        run: flutter coverage
+        run: flutter test --coverage
