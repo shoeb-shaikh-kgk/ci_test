@@ -13,11 +13,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Set up Flutter
-        
-        uses: ./.github/actions/ # Use the relative path to your custom action directory
+        uses: actions/setup-node@v2 # Use the setup-node action to set up Node.js (required for Flutter)
         with:
-          flutter-version: '3.13.3' # Specify the desired Flutter version
-          release-channel: 'stable' # (Optional) Specify the release channel (default: 'stable')
-          cache-sdk: true # (Optional) Cache the Flutter SDK for faster builds (default: true)
-          sdk-architecture: 'x64' # (Optional) Specify the SDK architecture (default: 'x64')
-
+          node-version: 14
+          
+      - name: Install Flutter
+        
+        run: |
+          git clone https://github.com/flutter/flutter.git -b stable --depth 1
+          export PATH="$PWD/flutter/bin:$PATH"
+        shell: bash
+      - name: Cache Flutter SDK
+        uses: actions/cache@v2
+        with:
+          path: ~/.pub-cache
+          key: flutter-pub-cache-${{ runner.os }}-${{ hashFiles('**/pubspec.yaml') }}
+      - name: Build Flutter App
+        run: flutter test # Adjust this command to match your build needs
