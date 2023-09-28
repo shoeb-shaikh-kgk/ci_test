@@ -30,12 +30,13 @@ runs:
       id: flutter
       run: setup.sh ${{ inputs.release-channel }} ${{ inputs.flutter-version }} ${{ inputs.sdk-architecture }} ${{ inputs.cache-sdk }}
       shell: bash
-
+      
     - name: Print Flutter Version
       run: echo "Installed Flutter Version: ${{ steps.flutter.outputs.installed-version }}"
-    
+      shell: bash
     - name: Print Flutter Cache Path
       if: ${{ inputs.cache-sdk == 'true' }}
       run: echo "Flutter Cache Path: ${{ steps.flutter.outputs.sdk-cache-path }}"
+      shell: bash
     - run: echo "Installed Flutter Version: ${{ steps.setup-flutter.outputs.installed-version }}"
-    
+      shell: bash
