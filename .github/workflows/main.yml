@@ -19,7 +19,7 @@ jobs:
 
       - name: Flutter Setup
       
-        uses: ./.github/actions/action.yml@v1
+        uses: ./.github/actions
         with:
             channel: stable
             version: any
