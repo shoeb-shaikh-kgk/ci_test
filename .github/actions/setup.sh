@@ -39,12 +39,23 @@ if ! check_command jq; then
     exit 1
 fi
 
+# Function to download the manifest file if it doesn't exist
+download_manifest() {
+    if [[ ! -f "$MANIFEST_JSON_PATH" ]]; then
+        echo "Downloading Flutter releases manifest..."
+        curl --connect-timeout 15 --retry 5 -o "$MANIFEST_JSON_PATH" "$MANIFEST_URL"
+    fi
+}
+
 # Main function to set up Flutter
 setup_flutter() {
     local channel="$1"
     local version="$2"
     local arch="$3"
     local cache="$4"
+    
+    # Download the manifest file if it doesn't exist
+    download_manifest
     
     [[ "$channel" == "master" ]] && FLUTTER_VERSION="master" || {
         local version_manifest=$(filter_manifest "$channel" "$arch" "$version")
