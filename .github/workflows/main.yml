@@ -1,46 +1,23 @@
-name: Flutter CI
+name: CI/CD with Flutter
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
-    name: Build and Test
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Flutter Setup
-      
-        uses: ./.github/actions/runner
+      - name: Set up Flutter
+        uses: ./ # Use the relative path to your custom action directory
         with:
-            channel: stable
-            version: any
-            arch: x64
-    
-      - name: Cache Flutter packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.pub-cache
-          key: pub-cache-${{ runner.os }}-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            pub-cache-${{ runner.os }}-
+          flutter-version: '3.13.3' # Specify the desired Flutter version
+          release-channel: 'stable' # (Optional) Specify the release channel (default: 'stable')
+          cache-sdk: true # (Optional) Cache the Flutter SDK for faster builds (default: true)
+          sdk-architecture: 'x64' # (Optional) Specify the SDK architecture (default: 'x64')
 
-      - name: Get Packages
-        run: flutter pub get
-        
-      - name: Run Analayze
-        run: flutter analyze
-        
-      - name: Run tests
-        run: flutter test
-
-      - name: Generate code coverage report
-        run: flutter test --coverage

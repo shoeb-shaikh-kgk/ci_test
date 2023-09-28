@@ -1,0 +1,39 @@
+name: 'Setup Flutter'
+description: 'Set up the Flutter environment for GitHub Actions'
+author: 'Your Name'
+icon: 'package'
+color: 'blue'
+inputs:
+  flutter-version:
+    description: 'The Flutter version to install (e.g., "2.5.2")'
+    required: true
+  release-channel:
+    description: 'The Flutter release channel (e.g., "stable", "beta", "dev")'
+    default: 'stable'
+  cache-sdk:
+    description: 'Cache the Flutter SDK for faster builds'
+    default: true
+  sdk-architecture:
+    description: 'The Flutter SDK architecture (x64 or arm64)'
+    default: 'x64'
+outputs:
+  installed-version:
+    description: 'The installed Flutter version'
+  sdk-cache-path:
+    description: 'The path to the cached Flutter SDK'
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      
+    - name: Setup Flutter
+      id: flutter
+      run: setup_flutter.sh ${{ inputs.release-channel }} ${{ inputs.flutter-version }} ${{ inputs.sdk-architecture }} ${{ inputs.cache-sdk }}
+      
+    - name: Print Flutter Version
+      run: echo "Installed Flutter Version: ${{ steps.flutter.outputs.installed-version }}"
+      
+    - name: Print Flutter Cache Path
+      if: ${{ inputs.cache-sdk == 'true' }}
+      run: echo "Flutter Cache Path: ${{ steps.flutter.outputs.sdk-cache-path }}"
