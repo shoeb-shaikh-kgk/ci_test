@@ -26,6 +26,7 @@ jobs:
           path: ~/.pub-cache
           key: flutter-pub-cache-${{ runner.os }}-${{ hashFiles('**/pubspec.yaml') }}
       - name: Build and Test Flutter App
+        shell: true
         run: |
           flutter pub get
           flutter test
