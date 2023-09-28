@@ -1,0 +1,23 @@
+name: Flutter CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2.5.7
+        with:
+          flutter-version: '3.13.3'
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Generate code coverage report
+        run: flutter coverage
