@@ -1,31 +1,16 @@
 #!/bin/bash
 
-set -eo pipefail
-
-# Check for the required jq tool
-command -v jq &>/dev/null || { echo "Please install 'jq'. See https://stedolan.github.io/jq/download/"; exit 1; }
-
 # Constants
+MANIFEST_BASE_URL="https://storage.googleapis.com/flutter_infra_release/releases"
 OS_NAME=$(uname -s | tr '[:upper:]' '[:lower:]')
 MANIFEST_JSON_PATH="releases_${OS_NAME}.json"
-MANIFEST_URL="https://storage.googleapis.com/flutter_infra_release/releases/releases_$OS_NAME.json"
-FLUTTER_DIR="$HOME/flutter"
+MANIFEST_URL="$MANIFEST_BASE_URL/$MANIFEST_JSON_PATH"
 CACHE_DIR="$RUNNER_TEMP/flutter_cache"
+FLUTTER_DIR="$HOME/flutter"
 
-# Local manifest path
-LOCAL_MANIFEST_PATH="$RUNNER_TEMP/$MANIFEST_JSON_PATH"
-
-# Function to download the releases file if it doesn't exist locally
-download_manifest_if_not_exists() {
-    if [[ ! -f "$LOCAL_MANIFEST_PATH" ]]; then
-        echo "Downloading Flutter releases manifest..."
-        mkdir -p "$(dirname "$LOCAL_MANIFEST_PATH")"
-        echo "$MANIFEST_URL"
-        curl --connect-timeout 15 --retry 5 -o "$LOCAL_MANIFEST_PATH" "$MANIFEST_URL" || { echo "Failed to download Flutter releases manifest."; exit 1; }
-
-    else
-        echo "Using existing Flutter releases manifest at $LOCAL_MANIFEST_PATH"
-    fi
+# Function to check if a command is available
+check_command() {
+    command -v "$1" >/dev/null 2>&1
 }
 
 # Function to download and extract an archive
@@ -48,38 +33,23 @@ download_and_extract_archive() {
     rm -f "$archive_local"
 }
 
-# Function to filter JSON data by channel, architecture, and version
-filter_manifest() {
-    local channel="$1"
-    local arch="$2"
-    local version="$3"
-    
-    jq --arg channel "$channel" --arg arch "$arch" --arg version "$version" '
-        .releases[] | select(
-            ($channel == "any" or .channel == $channel) and
-            ($arch == "x64" or .dart_sdk_arch == $arch or (.dart_sdk_arch | not)) and
-            ($version == "any" or .version == $version or
-                (.version | startswith(($version | sub("\\.x$"; "")) + ".")) and
-                .version != $version))
-    ' "$LOCAL_MANIFEST_PATH"
-}
+# Check for the required jq tool
+if ! check_command jq; then
+    echo "jq not found, please install it, https://stedolan.github.io/jq/download/"
+    exit 1
+fi
 
-# Function to set up Flutter
+# Main function to set up Flutter
 setup_flutter() {
     local channel="$1"
     local version="$2"
     local arch="$3"
     local cache="$4"
-
-    download_manifest_if_not_exists  # Download releases file if not exists locally
-
-    # Use the local manifest file
-    MANIFEST_JSON_PATH="$LOCAL_MANIFEST_PATH"
-
+    
     [[ "$channel" == "master" ]] && FLUTTER_VERSION="master" || {
         local version_manifest=$(filter_manifest "$channel" "$arch" "$version")
         [[ -n "$version_manifest" ]] || { echo "Unable to determine Flutter version."; exit 1; }
-        FLUTTER_VERSION=$(echo "$version_manifest" | jq -r '.version')
+        FLUTTER_VERSION="${version_manifest.version}"
     }
     
     local archive_url="https://storage.googleapis.com/flutter_infra_release/releases/${FLUTTER_VERSION}/flutter_${OS_NAME}_${arch}.tar.xz"
@@ -97,9 +67,26 @@ setup_flutter() {
     [[ "$cache" == "true" ]] && echo "sdk-cache-path=${CACHE_DIR}"
 }
 
+# Function to filter JSON data by channel, architecture, and version
+filter_manifest() {
+    local channel="$1"
+    local arch="$2"
+    local version="$3"
+    
+    jq --arg channel "$channel" --arg arch "$arch" --arg version "$version" '
+        .releases[] | select(
+            ($channel == "any" or .channel == $channel) and
+            ($arch == "x64" or .dart_sdk_arch == $arch or (.dart_sdk_arch | not)) and
+            ($version == "any" or .version == $version or
+                (.version | startswith(($version | sub("\\.x$"; "")) + ".")) and
+                .version != $version))
+    ' "$MANIFEST_JSON_PATH"
+}
+
 # Main script logic
 [[ -z "$RUNNER_OS" ]] && { echo "This script is intended for use in GitHub Actions workflows."; exit 1; }
 
 [[ ! -d "$CACHE_DIR" ]] && mkdir -p "$CACHE_DIR"
 
+# Call the setup_flutter function with appropriate parameters
 setup_flutter "$1" "$2" "$3" "$4"
