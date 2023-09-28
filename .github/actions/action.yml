@@ -26,7 +26,6 @@ runs:
   steps:
     - name: Checkout Code
       uses: actions/checkout@v2
-      
     - name: Setup Flutter
       id: flutter
       run: setup.sh ${{ inputs.release-channel }} ${{ inputs.flutter-version }} ${{ inputs.sdk-architecture }} ${{ inputs.cache-sdk }}
@@ -34,7 +33,7 @@ runs:
 
     - name: Print Flutter Version
       run: echo "Installed Flutter Version: ${{ steps.flutter.outputs.installed-version }}"
-      
+    
     - name: Print Flutter Cache Path
       if: ${{ inputs.cache-sdk == 'true' }}
       run: echo "Flutter Cache Path: ${{ steps.flutter.outputs.sdk-cache-path }}"
