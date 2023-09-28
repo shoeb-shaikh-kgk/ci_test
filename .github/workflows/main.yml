@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -18,11 +15,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Flutter Setup
-        uses: ./.github/actions/runner # Our Custom Action For Flutter
+        run: ./.github/actions/flutter-setup/setup.sh
         with:
           channel: stable # Specify the Flutter channel
-          version: any # Specify the Flutter version
-          arch: x64 # Specify the architecture
+          version: any    # Specify the Flutter version
+          arch: x64   
 
       - name: Cache Flutter packages
         uses: actions/cache@v2
