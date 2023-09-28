@@ -1,4 +1,4 @@
-name: Dart
+name: Flutter CI
 
 on:
   pull_request:
@@ -7,32 +7,33 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Dart
-        uses: dart-lang/setup-dart@v1.5.1
-
-      - name: Cache Flutter and pub dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.pub-cache
-            ~/.pub
-            ~/.fvm
-          key: ${{ runner.os }}-flutter-pub-${{ hashFiles('**/*.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-flutter-pub-
-
-      - name: Install and use FVM
-        run: |
-          dart pub global activate fvm
-          fvm install 3.13.3
-          fvm use 3.13.3
-
-      - name: Run Flutter tests
-        run: fvm flutter test
+      build:
+        runs-on: ubuntu-latest
+    
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v2
+    
+          - name: Set up Dart
+            uses: dart-lang/setup-dart@v1.5.1
+    
+          - name: Cache Flutter and pub dependencies
+            uses: actions/cache@v2
+            with:
+              path: |
+                ~/.pub-cache
+                ~/.pub
+                ~/.fvm
+              key: ${{ runner.os }}-flutter-pub-${{ hashFiles('**/*.yaml') }}
+    
+          - name: Install and use FVM
+            run: |
+              dart pub global activate fvm
+              fvm install 3.13.3
+              fvm use 3.13.3
+    
+          - name: Run Flutter tests
+            run: fvm flutter test
+    
+      # Deploy code to staging environment
+    
