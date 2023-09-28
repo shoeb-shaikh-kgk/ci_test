@@ -26,6 +26,8 @@ runs:
   steps:
     - name: Checkout Code
       uses: actions/checkout@v2
+    - run: chmod +x $GITHUB_ACTION_PATH/setup.sh
+      shell: bash
     - name: Setup Flutter
       id: flutter
       run: $GITHUB_ACTION_PATH/setup.sh ${{ inputs.release-channel }} ${{ inputs.flutter-version }} ${{ inputs.sdk-architecture }} ${{ inputs.cache-sdk }}
