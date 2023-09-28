@@ -1,20 +1,40 @@
-name: Flutter CI/CD
+name: Flutter CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: macos-latest
+    name: Build and Test
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2.10.0
+        uses: ./.github/actions/flutter-setup # Our Custom Action For Flutter
         with:
-          flutter-version: '3.13.3'
+          channel: stable # Specify the Flutter channel
+          version: any # Specify the Flutter version
+          arch: x64 # Specify the architecture
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.pub-cache
+          key: pub-cache-${{ runner.os }}-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            pub-cache-${{ runner.os }}-
+
+      - name: Get Packages
+        run: flutter pub get
+        
       - name: Run Analayze
         run: flutter analyze
         
