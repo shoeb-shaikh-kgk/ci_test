@@ -1,5 +1,7 @@
 name: 'Flutter Action'
 
+runs-on: ubuntu-latest
+
 inputs:
   channel:
     description: 'The Flutter build release channel'
@@ -13,8 +15,6 @@ inputs:
     description: 'The architecture of Flutter SDK executable (x64 or arm64)'
     required: false
     default: 'x64'
-
-runs-on: ubuntu-latest
 
 steps:
   - name: Flutter Setup
