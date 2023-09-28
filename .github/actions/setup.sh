@@ -8,7 +8,7 @@ command -v jq &>/dev/null || { echo "Please install 'jq'. See https://stedolan.g
 # Constants
 OS_NAME=$(uname -s | tr '[:upper:]' '[:lower:]')
 MANIFEST_JSON_PATH="releases_${OS_NAME}.json"
-MANIFEST_URL="https://storage.googleapis.com/flutter_infra_release/releases/${MANIFEST_JSON_PATH}"
+MANIFEST_URL="https://storage.googleapis.com/flutter_infra_release/releases/releases_$OS_NAME.json"
 FLUTTER_DIR="$HOME/flutter"
 CACHE_DIR="$RUNNER_TEMP/flutter_cache"
 
