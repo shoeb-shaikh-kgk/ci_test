@@ -18,5 +18,4 @@ inputs:
 
 steps:
   - name: Flutter Setup
-    uses: actions/checkout@v2
     run: './.github/actions/runner/setup.sh ${{ inputs.channel }} ${{ inputs.version }} ${{ inputs.arch }}'
