@@ -29,9 +29,9 @@ runs:
       
     - name: Setup Flutter
       id: flutter
-      run: setup_flutter.sh ${{ inputs.release-channel }} ${{ inputs.flutter-version }} ${{ inputs.sdk-architecture }} ${{ inputs.cache-sdk }}
+      run: setup.sh ${{ inputs.release-channel }} ${{ inputs.flutter-version }} ${{ inputs.sdk-architecture }} ${{ inputs.cache-sdk }}
       shell: bash
-      
+
     - name: Print Flutter Version
       run: echo "Installed Flutter Version: ${{ steps.flutter.outputs.installed-version }}"
       
