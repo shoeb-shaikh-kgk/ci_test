@@ -51,14 +51,11 @@ setup_flutter() {
     local arch="$3"
     local cache="$4"
     
-    # Download the manifest file if it doesn't exist
-    download_manifest
-    
     [[ "$channel" == "master" ]] && FLUTTER_VERSION="master" || {
         local version_manifest
         version_manifest=$(filter_manifest "$channel" "$arch" "$version")
         [[ -n "$version_manifest" ]] || { echo "Unable to determine Flutter version."; exit 1; }
-        FLUTTER_VERSION="$(echo "$version_manifest" | jq -r '.version')"
+        FLUTTER_VERSION="$(echo "$version_manifest" | jq -r '.version' | tr -d '\n')"
     }
     
     local archive_url="https://storage.googleapis.com/flutter_infra_release/releases/${FLUTTER_VERSION}/flutter_${OS_NAME}_${arch}.tar.xz"
