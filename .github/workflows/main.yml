@@ -26,14 +26,23 @@ jobs:
   
         - name: "Start Simulator"
           run: |
-              UDID=$(xcrun simctl list devices | grep -oE "iPhone 14 Pro Simulator \(16.2\) \([0-9A-F-]+\)" | grep -oE "[0-9A-F-]+")
+            UDID=$(xcrun xctrace list devices | grep -Eo "iPhone 14 Pro Simulator \(16.2\).*(\w{8}-\w{4}-\w{4}-\w{4}-\w{12})" | awk '{print $NF}')
 
-              if [ -z "$UDID" ]; then
-                echo "No Simulator with this name found: iPhone 14 Pro Simulator (16.2)"
-                exit 1
-              fi
-              
-              xcrun simctl boot "$UDID"
+            if [ -z "$UDID" ]; then
+              echo "No Simulator with this name found: iPhone 14 Pro Simulator (16.2)"
+              exit 1
+            fi
+            
+            echo "UDID: $UDID"
+            
+            # Check the existence of the simulator
+            if ! xcrun simctl list | grep -q "$UDID"; then
+              echo "Simulator with UDID $UDID not found."
+              exit 1
+            fi
+            
+            # Boot the simulator
+            xcrun simctl boot "$UDID"
     
         - name: Checkout code
           uses: actions/checkout@v2
