@@ -27,15 +27,15 @@ jobs:
         - name: "Start Simulator"
           run: |
             UDID=$(
-              xcrun xctrace list devices | grep "${{matrix.device}}" | awk -F ' *[][]' '{print $2}'
+              xcrun xctrace list devices | grep "iPhone 14 Pro Simulator (16.2)" | awk -F ' *[][]' '{print $2}'
             )
-  
+            
             if [ -z "$UDID" ]; then
-              echo "No Simulator with this name found: "${UDID}" ${{ matrix.device }} "
+              echo "No Simulator with this name found: iPhone 14 Pro Simulator (16.2)"
               exit 1
             fi
-  
-            xcrun simctl boot "${UDID}"
+            
+            xcrun simctl boot "$UDID"
     
         - name: Checkout code
           uses: actions/checkout@v2
