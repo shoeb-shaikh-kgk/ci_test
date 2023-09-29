@@ -19,26 +19,27 @@ jobs:
         - name: "List all simulators"
           run: "xcrun xctrace list devices"
   
-        - name: "Check available simulators"
-          run: |
-            xcrun simctl list devices
+        # - name: "Check available simulators"
+        #   run: |
+        #     xcrun simctl list devices
   
         - name: "Start Simulator"
           run: |
-            UDID=$(xcrun xctrace list devices | grep -Eo "iPhone 13 Pro Max Simulator \(16.2\) \(\w{8}-\w{4}-\w{4}-\w{4}-\w{12}\)" | awk '{print $NF}')
+            UDID=$(xcrun xctrace list devices | grep -Eo "iPhone 13 Pro Max Simulator \(16.2\) \(\w{8}-\w{4}-\w{4}-\w{4}-\w{12}\)" | awk '{print substr($NF, 2, length($NF)-2)}')
+
             if [ -z "$UDID" ]; then
-              echo "No Simulator with this name found: iPhone 14 Pro Simulator (16.2)"
+              echo "No Simulator with this name found: iPhone 13 Pro Max Simulator (16.2)"
               exit 1
             fi
-            
+
             echo "UDID: $UDID"
-            
+
             # Check the existence of the simulator
             if ! xcrun simctl list | grep -q "$UDID"; then
               echo "Simulator with UDID $UDID not found."
               exit 1
             fi
-            
+
             # Boot the simulator
             xcrun simctl boot "$UDID"
     
