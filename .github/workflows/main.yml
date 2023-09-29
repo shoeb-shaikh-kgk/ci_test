@@ -31,7 +31,7 @@ jobs:
             )
             
             if [ -z "$UDID" ]; then
-              echo "No Simulator with this name found: iPhone 14 Pro Simulator (16.2)"
+              echo "No Simulator with this name found:$UDID '$UDID' ${UDID} '${UDID}' iPhone 14 Pro Simulator (16.2)"
               exit 1
             fi
             
