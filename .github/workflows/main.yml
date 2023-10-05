@@ -63,10 +63,18 @@ jobs:
             dart pub global activate fvm
             fvm install 3.13.3
             fvm use 3.13.3
-  
+        - name: Get VM Service Port
+          id: get-port
+          run: |
+              FLUTTER_OUTPUT=$(flutter run 2>&1)
+              PORT_NUMBER=$(echo "$FLUTTER_OUTPUT" | grep -oE "An Observatory debugger and profiler on [::]:([0-9]+)/" | cut -d':' -f 2)
+              echo "Found VM service port: $PORT_NUMBER"
+              echo "PORT_NUMBER=$PORT_NUMBER" >> $GITHUB_ENV
+        - name: Set VM_SERVICE_URL
+          run: export VM_SERVICE_URL=http://localhost:${{ env.PORT_NUMBER }}
         - name: Run Flutter tests
           run: fvm flutter test
-        - name: "Run Flutter Driver tests"
+        - name: "Run Flutter Driver tests "
           run: "flutter drive --target=test_driver/app.dart"
     # Deploy code to staging environment
     
