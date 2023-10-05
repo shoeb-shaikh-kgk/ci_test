@@ -35,7 +35,7 @@ jobs:
       
           echo "UDID: $UDID"
           echo "UDID: $UDID"
-          echo "{UDID}={$UDID}" >> $GITHUB_OUTPUT
+          echo "::set-output name=UDID::$UDID"
           # Check the existence of the simulator
           if ! xcrun simctl list | grep -q "$UDID"; then
             echo "Simulator with UDID $UDID not found."
