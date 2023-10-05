@@ -66,10 +66,17 @@ jobs:
         - name: Get VM Service Port
           id: get-port
           run: |
-              FLUTTER_OUTPUT=$(flutter run 2>&1)
-              PORT_NUMBER=$(echo "$FLUTTER_OUTPUT" | grep -oE "An Observatory debugger and profiler on [::]:([0-9]+)/" | cut -d':' -f 2)
+            FLUTTER_OUTPUT=$(flutter run 2>&1)
+            PORT_NUMBER=$(echo "$FLUTTER_OUTPUT" | grep -oE ":[0-9]+/" | tr -d ':/')
+            if [ -z "$PORT_NUMBER" ]; then
+              echo "Failed to find the VM service port in Flutter output."
+              exit 1
+            else
               echo "Found VM service port: $PORT_NUMBER"
               echo "PORT_NUMBER=$PORT_NUMBER" >> $GITHUB_ENV
+            fi
+          shell: bash
+
         - name: Set VM_SERVICE_URL
           run: export VM_SERVICE_URL=http://localhost:${{ env.PORT_NUMBER }}
         - name: Run Flutter tests
