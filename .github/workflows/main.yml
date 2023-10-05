@@ -8,21 +8,10 @@ on:
 
 jobs:
   drive:
-    strategy:
-      matrix:
-        device:
-          - "iPhone 13 Pro Max Simulator"
-
     runs-on: macOS-latest
-
     steps:
       - name: "List all simulators"
         run: "xcrun xctrace list devices"
-
-      # - name: "Check available simulators"
-      #   run: |
-      #     xcrun simctl list devices
-
       - name: "Start Simulator"
         id: start-simulator
         run: |
@@ -32,7 +21,6 @@ jobs:
             echo "No Simulator with this name found: iPhone 13 Pro Max Simulator (16.2)"
             exit 1
           fi
-      
           echo "UDID: $UDID"
           echo "UDID: $UDID"
           echo "::set-output name=UDID::$UDID"
@@ -41,7 +29,6 @@ jobs:
             echo "Simulator with UDID $UDID not found."
             exit 1
           fi
-      
           # Boot the simulator
           xcrun simctl boot "$UDID"
       
@@ -67,28 +54,8 @@ jobs:
           fvm install 3.13.3
           fvm use 3.13.3
 
-      # - name: Get VM Service Port
-      #   id: get-port
-      #   run: |
-      #     fvm flutter run --machine
-      #     PORT_NUMBER=$(grep -oE '"vmServicePort": [0-9]+' $FLUTTER_TEST_OUTPUT | tr -d ':' | tr -d '"')
-      #     if [ -z "$PORT_NUMBER" ]; then
-      #       echo "Failed to find the VM service port in Flutter output."
-      #       exit 1
-      #     else
-      #       echo "Found VM service port: $PORT_NUMBER"
-      #       echo "PORT_NUMBER=$PORT_NUMBER" >> $GITHUB_ENV
-      #     fi
-      #   shell: bash
-
-      # - name: Set VM_SERVICE_URL
-      #   run: export VM_SERVICE_URL=http://localhost:${{ env.PORT_NUMBER }}
-
       - name: Run Flutter tests
         run: fvm flutter test
 
       - name: Run Flutter tests
         run: fvm flutter test integration_test -d ${{ steps.start-simulator.outputs.UDID }}
-
-      # - name: "Run Flutter Driver tests "
-      #   run: "fvm flutter drive --target=test_driver/app.dart"
