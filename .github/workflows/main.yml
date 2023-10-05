@@ -82,6 +82,6 @@ jobs:
         - name: Run Flutter tests
           run: fvm flutter test
         - name: "Run Flutter Driver tests "
-          run: "flutter drive --target=test_driver/app.dart"
+          run: "fvm flutter drive --target=test_driver/app.dart"
     # Deploy code to staging environment
     
