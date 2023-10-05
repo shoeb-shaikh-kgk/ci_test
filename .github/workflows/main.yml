@@ -34,6 +34,8 @@ jobs:
           fi
       
           echo "UDID: $UDID"
+          echo "UDID: $UDID"
+          echo "::set-output name=UDID::$UDID"
       
           # Check the existence of the simulator
           if ! xcrun simctl list | grep -q "$UDID"; then
@@ -43,9 +45,7 @@ jobs:
       
           # Boot the simulator
           xcrun simctl boot "$UDID"
-        outputs:
-          UDID: ${{ steps.start-simulator.outputs.UDID }}
-
+      
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -89,7 +89,7 @@ jobs:
         run: fvm flutter test
 
       - name: Run Flutter tests
-        run: fvm flutter test integration_test -d ${{ env.UDID }}
+        run: fvm flutter test integration_test -d ${{ steps.start-simulator.outputs.UDID }}
 
       # - name: "Run Flutter Driver tests "
       #   run: "fvm flutter drive --target=test_driver/app.dart"
