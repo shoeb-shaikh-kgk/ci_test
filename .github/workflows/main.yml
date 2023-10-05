@@ -66,7 +66,7 @@ jobs:
         - name: Get VM Service Port
           id: get-port
           run: |
-            FLUTTER_OUTPUT=$(flutter run 2>&1)
+            FLUTTER_OUTPUT=$(fvm flutter run 2>&1)
             PORT_NUMBER=$(echo "$FLUTTER_OUTPUT" | grep -oE ":[0-9]+/" | tr -d ':/')
             if [ -z "$PORT_NUMBER" ]; then
               echo "Failed to find the VM service port in Flutter output."
